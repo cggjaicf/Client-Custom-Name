@@ -1,11 +1,14 @@
 {
-    "required": true,
-    "package": "com.ownwn.mixin",
-    "compatibilityLevel": "JAVA_21",
-    "injectors": {
-        "defaultRequire": 1
-    },
-    "client": [
-        "TextRendererMixin"
-    ]
+	"required": true,
+	"package": "com.ownwn.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	},
+	"client": [
+		"FontMixin"
+	]
 }

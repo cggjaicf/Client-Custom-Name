@@ -7,14 +7,14 @@ import dev.isxander.yacl3.config.v2.api.autogen.*
 import dev.isxander.yacl3.config.v2.api.autogen.Boolean
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.client.gui.screen.Screen
-import net.minecraft.util.Identifier
+import net.minecraft.client.gui.screens.Screen
+import net.minecraft.resources.Identifier
 import java.awt.Color
 
 class Config {
     companion object {
         private val HANDLER: ConfigClassHandler<Config> = ConfigClassHandler.createBuilder(Config::class.java)
-            .id(Identifier.of(ClientCustomName.MODID, "config"))
+            .id(Identifier.fromNamespaceAndPath(ClientCustomName.MODID, "config"))
             .serializer { config ->
                 GsonConfigSerializerBuilder.create(config)
                     .setPath(FabricLoader.getInstance().configDir.resolve( ClientCustomName.MODID + ".json5"))

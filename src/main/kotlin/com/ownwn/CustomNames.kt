@@ -1,10 +1,11 @@
 package com.ownwn
 
 import com.ownwn.config.Config
-import net.minecraft.client.MinecraftClient
-import net.minecraft.text.MutableText
-import net.minecraft.text.OrderedText
-import net.minecraft.text.Text
+import net.minecraft.client.Minecraft
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
+import net.minecraft.util.FormattedCharSequence
+import kotlin.collections.joinToString
 
 
 class CustomNames {
@@ -12,13 +13,13 @@ class CustomNames {
         private val config = Config.instance()
 
 
-        private fun OrderedText.contains(string: String): Boolean {
+        private fun FormattedCharSequence.contains(string: String): Boolean {
             return TextUtils.openOrderedText(this).joinToString("") { it.string }.contains(string)
         }
 
         /** returns the players username, or null if not enabled */
         private fun getUsername(): String? {
-            val username = MinecraftClient.getInstance().player?.name?.string
+            val username = Minecraft.getInstance().player?.name?.string
 
             val customNameEnabled = config.customNameToggle && config.customName.isNotEmpty()
 
@@ -32,11 +33,11 @@ class CustomNames {
             val username = getUsername() ?: return string
             val customRankEnabled = config.customRankToggle && config.customRank.isNotEmpty()
 
-            var newString = string;
+            var newString = string
 
             // loop in case username appears in multiple places
             // weird things can happen in the YACL editor with this, have a failsafe counter just in case
-            var repetitionCounter = 0;
+            var repetitionCounter = 0
             while (++repetitionCounter < 10 && string.contains(username)) {
 
                 // replace rank
@@ -52,7 +53,7 @@ class CustomNames {
         }
 
         /** @return An edited `OrderedText` with the player's custom name and rank*/
-        fun replaceName(text: OrderedText): OrderedText {
+        fun replaceName(text: FormattedCharSequence): FormattedCharSequence {
             val username = getUsername() ?: return text
             val customRankEnabled = config.customRankToggle && config.customRank.isNotEmpty()
 
@@ -64,7 +65,7 @@ class CustomNames {
 
             // loop in case username appears in multiple places
             // weird things can happen in the YACL editor with this, have a failsafe counter just in case
-            var repetitionCounter = 0;
+            var repetitionCounter = 0
             while (++repetitionCounter < 10 && currentText.contains(username)) {
 
                 // replace rank
@@ -87,7 +88,7 @@ class CustomNames {
         /** @param oldText The text to be edited
          * @param chromaType Which type of chroma the user has selected from config
          * @param isCustomName Whether to use the custom name static colour, or the custom rank static colour*/
-        private fun getCustomText(oldText: MutableText, chromaType: Config.ChromaType, isCustomName: Boolean): Text {
+        private fun getCustomText(oldText: MutableComponent, chromaType: Config.ChromaType, isCustomName: Boolean): Component {
             return when (chromaType) {
                 Config.ChromaType.FANCY_CHROMA -> TextUtils.dynamicSpectrum(oldText)
                 // get the correct static colour for rank/name
@@ -98,8 +99,8 @@ class CustomNames {
             }
         }
         /** overload of [getCustomText]*/
-        private fun getCustomText(oldText: String, chromaType: Config.ChromaType, isCustomName: Boolean): Text {
-            return getCustomText(Text.literal(oldText), chromaType, isCustomName)
+        private fun getCustomText(oldText: String, chromaType: Config.ChromaType, isCustomName: Boolean): Component {
+            return getCustomText(Component.literal(oldText), chromaType, isCustomName)
         }
     }
 
