@@ -89,6 +89,11 @@ class CustomNames {
          * @param chromaType Which type of chroma the user has selected from config
          * @param isCustomName Whether to use the custom name static colour, or the custom rank static colour*/
         private fun getCustomText(oldText: MutableComponent, chromaType: Config.ChromaType, isCustomName: Boolean): Component {
+            // Replace only the text; do not add or modify any colour/style
+            if (isCustomName && !config.staticNameModifyColor) {
+                return Component.literal(oldText.string)
+            }
+
             return when (chromaType) {
                 Config.ChromaType.FANCY_CHROMA -> TextUtils.dynamicSpectrum(oldText)
                 // get the correct static colour for rank/name
