@@ -18,6 +18,9 @@
         "yacl3.config.client-custom-name:config.customNameType": "Name Colour Type",
         "yacl3.config.client-custom-name:config.customNameType.desc": "Customise the way your name is displayed",
 
+        "yacl3.config.client-custom-name:config.staticNameModifyColor": "Whether to modify static name color or keep whatever was set initially",
+        "yacl3.config.client-custom-name:config.staticNameModifyColor.desc": "Choose whether to keep name color or not",
+
         "yacl3.config.client-custom-name:config.staticNameColour": "Static Name Colour",
         "yacl3.config.client-custom-name:config.staticNameColour.desc": "The colour to use if you select Static Colour for your custom name",
 
