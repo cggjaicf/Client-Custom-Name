@@ -15,9 +15,14 @@ class TextUtils {
         private val config = Config.instance()
 
         /** Overload of [replaceOrderedText] */
-        fun replaceOrderedText(original: FormattedCharSequence, target: String, replacement: Component): FormattedCharSequence {
+        fun replaceOrderedText(
+            original: FormattedCharSequence,
+            target: String,
+            replacement: Component,
+            preserveOriginalStyle: Boolean = false
+        ): FormattedCharSequence {
             val originalTextArray = openOrderedText(original)
-            return replaceOrderedText(original, originalTextArray, target, replacement)
+            return replaceOrderedText(original, originalTextArray, target, replacement, preserveOriginalStyle)
         }
 
         /** Replaces the first occurrence of `target` with `replacement`
@@ -26,7 +31,8 @@ class TextUtils {
             originalText: FormattedCharSequence,
             originalTextArray: MutableList<Component>, // list of single characters
             target: String,
-            replacement: Component
+            replacement: Component,
+            preserveOriginalStyle: Boolean = false
         ): FormattedCharSequence {
         // include originalText in case of early return, or if no changes are made
 
@@ -60,8 +66,13 @@ class TextUtils {
                 if (i > (targetIndex - 1) && replacementStrIndex < min(targetLength, replacementString.length)) {
                     currentStr = replacementString[replacementStrIndex].toString()
 
-                    currentStyle = if (replacementStyleHasSiblings) replacement.siblings[replacementStrIndex].style
-                    else replacement.style
+                    if (!preserveOriginalStyle) {
+                        currentStyle = if (replacementStyleHasSiblings) {
+                            replacement.siblings[replacementStrIndex].style
+                        } else {
+                            replacement.style
+                        }
+                    }
                     replacementStrIndex++
 
                 }
@@ -69,17 +80,29 @@ class TextUtils {
                 newText.append(Component.literal(currentStr).setStyle(currentStyle))
 
                 // replacement.len > target.len so we need to add extra chars to the text
-                if (!appendedExtraReplacement && replacementString.length > targetLength && replacementStrIndex == targetLength) {
-
+                if (!appendedExtraReplacement && replacementString.length > targetLength &&
+                    replacementStrIndex == targetLength
+                ) {
                     if (!replacementStyleHasSiblings) {
-                        newText.append(Component.literal(replacementString.substring(targetLength)).setStyle(currentStyle))
+                        newText.append(
+                            Component.literal(
+                                replacementString.substring(targetLength)
+                            ).setStyle(currentStyle)
+                        )
                     } else {
-                        // account for styles of individual chars in replacement
-                        for ((replacementIterator, theChar) in replacementString.substring(targetLength).toCharArray()
-                            .withIndex()) {
+                        for ((replacementIterator, theChar) in
+                            replacementString.substring(targetLength).toCharArray().withIndex()
+                        ) {
+                            val style = if (preserveOriginalStyle) {
+                                currentStyle
+                            } else {
+                                replacement.siblings[
+                                    replacementIterator + replacementStrIndex
+                                ].style
+                            }
+
                             newText.append(
-                                Component.literal(theChar.toString())
-                                    .setStyle(replacement.siblings[replacementIterator + replacementStrIndex].style)
+                                Component.literal(theChar.toString()).setStyle(style)
                             )
                         }
                     }

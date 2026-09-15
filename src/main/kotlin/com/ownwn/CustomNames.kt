@@ -78,7 +78,8 @@ class CustomNames {
 
                 // replace name
                 currentText = TextUtils.replaceOrderedText(currentText, username,
-                    getCustomText(config.customName, config.customNameType, true)
+                    getCustomText(config.customName, config.customNameType, true),
+                    preserveOriginalStyle = !config.staticNameModifyColor
                 )
             }
 
