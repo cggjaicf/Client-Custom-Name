@@ -56,6 +56,11 @@ class Config {
 
     @SerialEntry
     @AutoGen(category = "custom_name")
+    @EnumCycler
+    var staticNameModifyColor: kotlin.Boolean = true
+    
+    @SerialEntry
+    @AutoGen(category = "custom_name")
     @ColorField
     var staticNameColour: Color = Color(10898943)
 
