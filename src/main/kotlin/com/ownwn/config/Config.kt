@@ -56,9 +56,9 @@ class Config {
 
     @SerialEntry
     @AutoGen(category = "custom_name")
-    @EnumCycler
+    @MasterTickBox(value = ["staticNameColour"])
     var staticNameModifyColor: kotlin.Boolean = true
-    
+
     @SerialEntry
     @AutoGen(category = "custom_name")
     @ColorField
